@@ -1,0 +1,15 @@
+{
+  "name": "book-2023",
+  "description": "book-2023",
+  "version": "0.0.0",
+  "author": "kss-pc-club",
+  "scripts": {
+    "build": "vivliostyle build",
+    "preview": "vivliostyle preview"
+  },
+  "dependencies": {
+    "@vivliostyle/cli": "latest"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}
