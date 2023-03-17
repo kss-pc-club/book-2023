@@ -3,7 +3,7 @@ module.exports = {
   author: "kss-pc-club", // default to `author` in `package.json` or undefined.
   language: "ja", // default to undefined.
   size: "JIS-B5", // paper size.
-  theme: "@vivliostyle/theme-techbook@^0.4.1", // .css or local dir or npm package. default to undefined.
+  theme: "css/theme_print.css", // .css or local dir or npm package. default to undefined.
   entry: [
     "comments.md", // `title` is automatically guessed from the file (frontmatter > first heading).
     // {

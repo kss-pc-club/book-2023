@@ -1,0 +1,12 @@
+@import 'theme_common';
+
+// 端の余白をなくす
+@page :left {
+  margin-left: $page-margin-outer;
+  margin-right: $page-margin-outer;
+}
+
+@page :right {
+  margin-left: $page-margin-outer;
+  margin-right: $page-margin-outer;
+}

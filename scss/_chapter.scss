@@ -1,0 +1,33 @@
+/* 仕様上こうするしかない */
+@page:first {
+  counter-reset: chapter -2;
+}
+@page:nth(1) {
+  counter-increment: chapter;
+}
+
+body {
+  counter-reset: section subsection fig tbl footnote cite subchapter;
+}
+
+section {
+  h1 {
+    margin-top: 15mm;
+    &:not(.doc) {
+      &::before {
+        content: '第 ' counter(chapter) ' 章';
+        display: block;
+        font-size: 0.8em;
+        margin-bottom: 0.7em;
+      }
+    }
+  }
+  h2 {
+    counter-increment: subchapter;
+    &:not(.doc) {
+      &::before {
+        content: counter(chapter) '.' counter(subchapter) '　';
+      }
+    }
+  }
+}

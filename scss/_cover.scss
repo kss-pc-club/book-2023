@@ -1,0 +1,33 @@
+@page:first {
+  @top-left-corner {
+    content: none;
+  }
+  @top-center {
+    content: none;
+  }
+  @top-right-corner {
+    content: none;
+  }
+  @bottom-left {
+    content: none;
+  }
+  @bottom-center {
+    content: counter(page);
+  }
+  @bottom-right {
+    content: none;
+  }
+
+  .front {
+    text-align: center;
+    font-family: $font-sans-serif;
+  }
+  .detail {
+    font-family: $font-sans-serif;
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    font-size: 1.2rem;
+    bottom: 0;
+  }
+}

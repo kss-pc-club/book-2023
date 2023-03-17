@@ -1,0 +1,13 @@
+section.footnotes {
+  position: absolute;
+  //left: 132.283px;
+  width: 100%;
+  top: 700px;
+  display: block;
+
+  > hr {
+    margin-inline-start: -1000px;
+    margin-inline-end: 60%;
+    margin-block-end: 0.8em;
+  }
+}
