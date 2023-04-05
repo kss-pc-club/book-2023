@@ -6,6 +6,7 @@ module.exports = {
   theme: "css/theme_print.css", // .css or local dir or npm package. default to undefined.
   entry: [
     "comments.md", // `title` is automatically guessed from the file (frontmatter > first heading).
+    "questionnaire/index.md", // path can be absolute or relative to `entryContext`.
     // {
     //   path: 'epigraph.md',
     //   title: 'Epigraph', // title can be overwritten (entry > file),
