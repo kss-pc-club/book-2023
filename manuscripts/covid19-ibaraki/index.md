@@ -30,8 +30,7 @@ author: a01sa01to
 
 **はい、私が作りました。**
 
-コロナも落ち着いてきたので、私の作ったこの対策サイトの振り返りをしてみようと思います。
-裏話とか、私の思い出とか、適当に書いていきます。
+コロナも落ち着いてきて、対策サイトも終盤期(?) になってきた <span class="footnote">終盤期というのは、5 類相当移行によってデータの毎日公表が終了するせいで、更新が頻繁に行われなくなるよというイメージです。少なくとも今のところサイト閉鎖のつもりはありません。</span> ので、私の作ったこの対策サイトの振り返りをしてみようと思います。
 
 ## やったこと
 
@@ -55,7 +54,7 @@ author: a01sa01to
 興味があればビルドしてみてください。
 
 そして初回 Release をします。
-当時 GitHub の Release 機能や Git の Tag 機能について無知だったので、v1 <span class="footnote">https://github.com/a01sa01to/covid19-ibaraki/releases/tag/v1.0</span> は 3 月 24 日でした。
+当時 GitHub の Release 機能や Git の Tag 機能について無知だったので、初回 Release は 3 月 24 日でした。<span class="footnote">https://github.com/a01sa01to/covid19-ibaraki/releases/tag/v1.0</span>
 
 やはり需要があったのか、 Google Analytics で見たところ、ピーク時には約 1 万 PV/日も！
 2023 年 4 月 20 日現在、累計 100 万 PV を超えていたようです。ありがとうございます！
@@ -65,9 +64,10 @@ author: a01sa01to
 
 ![Google Analyticsの画面](./analytics.png)
 
-![感染者数 (log10) と重ねた図](./analytics-confirmed.png)
+![感染者数 (log10) と重ねた図 (緑が感染者数、青がPV数)](./analytics-confirmed.png)
 
 2022 年 9 月下旬から Google Analytics のプロパティを変えたんですが、画像を重ねるのがめんどくさかったのでグラフは手書きです。
+「ユーザー +1 万」「セッション +2.1 万」も 2022 年 9 月下旬からのものです。
 
 ちなみに、一番閲覧が多かったのは「市町村別感染者数」。県のサイトは PDF 公開だし一覧表示されてなかったので、表で見れる対策サイトは需要が高かったっぽい。
 また、GitHub 上でも、数週間で十数もの Star をいただきました。
@@ -85,9 +85,27 @@ Issue でのアイデア出し、それにかかわる Pull Request などして
 v2.0 <span class="footnote">https://github.com/a01sa01to/covid19-ibaraki/releases/tag/v2.0</span> で反映し、東京都版の派生サイトのファイルを変更する PR を提出しました。<span class="footnote">https://github.com/tokyo-metropolitan-gov/covid19/pull/3260</span>
 ついでに、開発用サイトのドメインも <https://covid19-dev.a01sa01to.com/> に変更しました。
 
+このせいかコロナの波が来たせいか微妙ですが、PV の最初の波はこの時期です。
+
 ### 自動ツイート機能
 
 やっぱり更新情報があったほうがいいよね、と思い実装してみました。
+実装が楽そうな Python を用いています。
+いろいろ文献があったので、参考にしながら (ほぼコピペ) 実装しました。
+
+もともと私の個人Twitterアカウントでツイートしていましたが、さすがに専用アカウントを作りました。<span class="footnote">https://twitter.com/covid19_ibaraki</span>
+GitHub Actions でデプロイ完了時に「サイトを更新しました！」といった文をツイートするようにしました。
+さまざまな要望に応えるためにツイート文に、今日の感染者数や重症者数などの情報を加えることも後日から行いました。
+
+### 県公式サイトへの掲載
+
+なんと、県公式サイトに掲載していただきました！
+
+![県公式サイト https://www.pref.ibaraki.jp/1saigai/2019-ncov/](./pref.png)
+
+しかしここまでが長かったんですよねぇ...
+
+経緯
 
 🚧 To be written...
 
@@ -96,3 +114,5 @@ v2.0 <span class="footnote">https://github.com/a01sa01to/covid19-ibaraki/release
 ![原案](./ng.png){width=400}
 
 ![却下された原案 (そ、そんな...)](./eno.png){width=450}
+
+読み飽きないように、ところどころネタ要素を入れたかったんですが、NGになりました...。
