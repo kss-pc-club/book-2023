@@ -313,7 +313,8 @@ public:
         case AHDSRState::Attack:
             if (ElapsedTime < ahdsr.AttackTime)
             {
-                CurrentLevel = Math::Lerp(0.0, 1.0, ElapsedTime / ahdsr.AttackTime);
+                CurrentLevel = Math::Lerp(0.0, 1.0, 
+                                            ElapsedTime / ahdsr.AttackTime);
                 break;
             }
             ElapsedTime = 0;
@@ -333,7 +334,8 @@ public:
         case AHDSRState::Decay:
             if (ElapsedTime < ahdsr.DecayTime)
             {
-                CurrentLevel = Math::Lerp(1.0, ahdsr.SustainLevel, ElapsedTime / ahdsr.DecayTime);
+                CurrentLevel = Math::Lerp(1.0, ahdsr.SustainLevel,    
+                                            ElapsedTime / ahdsr.DecayTime);
                 break;
             }
             ElapsedTime = 0;
