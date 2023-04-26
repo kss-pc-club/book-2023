@@ -65,7 +65,302 @@ SUSTAIN で設定した音量に達するまでの時間を設定できます。
 DELAY 以外の5つを実装します。
 
 - LFO
-ごく簡単なものを実装します。
+ごく簡単なものを実装します。---
+title: ソフトウェアシンセサイザを作ってみよう
+auther: Nagaso.cpp
+---
+
+# ソフトウェアシンセサイザを作ってみよう
+
+<span class="author">Nagaso.cpp</span>
+
+## はじめに
+  
+こんにちは。6期生の Nagaso.cpp です。昨年に引き続き部誌の執筆に参加しました。  
+今年はソフトウェアシンセサイザの自作に挑戦してみました。趣味の DTM でプラグインシンセサイザをいじっているうちに自作したくなったので、簡単なものを作ってみることにしました。
+
+## シンセサイザとは？
+
+シンセサイザとは、電気が持つ波を変換にして音にし、それを組み合わせて様々な音色を出すことのできる電気楽器です。エレキギターやエレクトリックピアノも電気楽器ですが、これらは発音自体はアコースティック（「音を鳴らす」という行為自体には電気を要さない）なのに対して、シンセサイザは発音にも電気を使うという特徴があります。具体例として、DTM での作曲に用いられるプラグインシンセサイザ「Vital」を見てみましょう。
+
+![Vital の画面](vital.png)
+
+こちらが Vital の画面です。この画面を参考に、シンセサイザの主な機能を見ていきましょう。
+
+![Vital：オシレータ](vital_oscillator.png)
+
+左上ではオシレータの設定をすることができます。オシレータは音の元となる波形を作りだすものです。波形には様々な種類があり、サイン波やのこぎり波、パルス波などがあります。この波形を更に細かく弄ったり、その他様々なパラメータを弄ったりすることができます。
+
+![Vital：エンベロープ](vital_envelope.png)
+
+右上ではエンベロープの設定をすることができます。エンベロープは、以下の6つのパラメータを変更することで、オシレータで設定した音の鳴り方を調整することができます。
+
+- DELAY  
+音の入力があってから音が鳴り始めるまでの秒数を設定できます。
+
+- ATTACK  
+音の入力があってから最大音量に達するまでの時間を設定できます。何も弄らなければ鳴った瞬間に最大の音量になります。
+
+- HOLD  
+最大音量になってからその状態をキープする秒数を指定できます。
+
+- SUSTAIN  
+音を鳴らし続けた時に最終的に到達する音量を設定できます。例えば、ピアノは鍵盤を押し続けると減衰して音は聞こえなくなるので、SUSTAIN は0になります。
+
+- DECAY  
+SUSTAIN で設定した音量に達するまでの時間を設定できます。
+
+- RELEASE  
+音の入力が終わってから完全に音が消えるまでの時間を設定できます。
+
+![Vital：LFO](vital_lfo.png)
+
+右側の真ん中では LFO の設定をすることができます。LFO は Low Frequency Oscillator の略で、その名の通りオシレータの一種ですが、通常のオシレータとは違い 4Hz 程度の低い周波数の音を出します。こちらも波形を弄ることができ、オシレータやフィルタなど様々な部分に細かな変化を生み出し、音に動きを作り出すことができます。
+
+![Vital：Filter](vital_filter.png)
+
+左下ではフィルターの設定をすることができます。フィルターは鳴っている音の高域あるいは低域の周波数の成分などをカットして、音色を変化させることができます。
+
+## 実装する機能
+
+　さて、ここからは本題に入っていきます。さすがに Vital のような完璧なものを作るのは今の私の技術力では無理なので、オシレータ・エンヴェロープ・LFO の3つの機能を搭載したシンプルなシンセサイザを作ることにしました。
+
+- オシレータ  
+サイン波とのこぎり波の2つを実装し、切り替えられるようにします。また、Vital のように波形を表示して視覚的に分かりやすくします。
+
+- エンベロープ  
+DELAY 以外の5つを実装します。
+
+## 使用する技術
+
+言語：C++
+
+フレームワーク：OpenSiv3D v0.6.9
+
+## エンベロープを作る
+
+　エンベロープの部分を作っていきます。各パラメータ (Attack, Hold, Decay, Sustain, Release) は ``struct`` で以下のようにまとめて管理します。
+
+```
+struct AHDSRConfig {
+    double AttackTime = 0.1;
+    double HoldTime = 0.1;
+    double DecayTime = 0.1;
+    double SustainLevel = 0.6;
+    double ReleaseTime = 0.2;
+};
+```
+
+エンベロープ本体を、``AHDSREnvelope`` クラスとして実装します。以降はこの中身を書いていきます。
+
+```
+class AHDRSEnvelope
+{
+    // エンベロープの処理を書いていく
+};
+```
+
+エンベロープでは、Attack、Hold、Decay、Sustain、Release の順に状態遷移して処理を行うようにします。まず、エンベロープの遷移状態を表す ``AHDSRState`` クラスを実装します。
+
+```
+public:
+    class AHDSRState
+    {
+        Attack, Hold, Decay, Sustain, Release;
+    };
+```
+
+さらに、エンベロープ内で使用する変数を定義します。
+
+```
+private:
+    AHDSRState CurrentState = AHDSRState::Attack; // 現在のエンベロープの状態
+    double ElapsedTime = 0.0; // その状態に遷移してからの経過時間
+    double CurrentLevel = 0.0; // 鳴っている音の音量
+    double ReleaseStart = 0.0; // AHDSRState が Release になったときの音量
+```
+
+ここからはエンベロープの各遷移状態における処理を書いていきます。これ以降は全て ``public`` です。 ``ADSRSConfig`` の各値と単位時間の値を表す ``DeltaTime`` を引数に持つ ``EnvUpdate``関数を定義します。 ``EnvUpdate`` 関数は、波形に遷移状態に応じた処理をするようにします。これを ``switch`` 文を使って実装します。
+
+```
+void EnvUpdate (AHDSRConfig &ahdsr, double DeltaTime)
+{
+    switch (CurrentState)
+    {
+        // 遷移状態によって処理を分ける
+    }
+}
+```
+
+ここからは各遷移状態の処理を書いていきます。
+
+Attack では、 ``CurrentLevel`` を ``AttackTime`` 秒かけて 0.0 から 1.0 まで増幅させます。Siv3D には、ベクトル A からベクトル B への線形補完ができる関数 ``Math::Lerp()`` 関数が用意されているのでそれを使います。
+
+```
+case AHDSRState::Attack:
+    if (ElapsedTime < ahdsr.AttackTime) // ahdsr.AttackTime 秒かけて増幅
+    {
+        CurrentLevel = Math::Lerp(0.0, 1.0, ElapsedTime / ahdsr.AttackTime);
+        break;
+    }
+    // 処理がすべて終わったら各値を更新
+    ElapsedTime = 0;
+    CurrentState = AHDSRState::Hold;
+    [[fallthrough]]; // そのまま Hold に移行する
+```
+
+Hold では、 ``CurrentLevel`` を ``HoldTime`` 秒の間 1.0 に維持します。
+
+```
+case AHDSRState::Hold:
+    if (ElapsedTime < ahdsr.HoldTime)
+    {
+        CurrentLevel = 1.0;
+        break;
+    }
+    ElapsedTime = 0;
+    CurrentState = AHDSRState::Decay;
+    [[fallthrough]]; // そのまま Decay に移行する
+```
+
+Decay では、 ``CurrentLevel`` を ``DecayTime`` 秒かけて ``SustainLevel`` まで減衰させます。こちらも ``Math::Lerp()`` 関数を用いて線形補完します。
+
+```
+case AHDSRState::Decay:
+    if (ElapsedTime < ahdsr.DecayTime)
+    {
+        CurrentLevel = Math::Lerp(1.0, ahdsr.SustainLevel, 
+                                    ElapsedTime / ahdsr.DecayTime);
+        break;
+    }
+    ElapsedTime = 0;
+    CurrentState = AHDSRState::Sustain;
+    [[fallthrough]]; // そのまま Sustain に移行する
+```
+
+Sustain では、ノートがオフになるまで ``CurrentLevel`` を ``SustainLevel`` に維持します。
+
+```
+case AHDSRState::Sustain:
+    CurrentLevel = ahdsr.SustainLevel;
+    break;
+```
+
+Release では、ノートがオフになったときに ``ReleaseTime`` 秒かけて ``CurrentLevel`` を 0.0 まで減衰させます。こちらも ``Math::Lerp()`` を用いて線形補完します。
+
+```
+case AHDSRState::Release:
+    CurrentLevel = Math::Lerp(ReleaseStart, 0.0, 
+                                ElapsedTime / ahdsr.ReleaseTime);
+    break;
+```
+
+最後に、処理が終わったら ``DeltaTime`` 秒だけ時間を進めるようにします。
+
+```
+ElapsedTime += DeltaTime;
+```
+
+これで ``EnvUpdate()`` 関数の実装が完了しました。
+
+最後に、ノートがオフになったときに ``CurrentState`` を ``AHDSRState::Release`` にするための ``NoteOff()`` 関数を実装します。
+
+```
+void NoteOff()
+{
+    ElapsedTime = 0;
+    ReleaseStart = CurrentLevel;
+    CurrentState = AHDSRState::Release;
+}
+```
+
+これで ``AHDSREnvelope`` クラスの実装が完了しました。全体像は以下の通りです。
+
+```
+// AHDSR の初期値
+struct AHDSRConfig {
+    double AttackTime = 0.1;
+    double HoldTime = 0.1;
+    double DecayTime = 0.1;
+    double SustainLevel = 0.6;
+    double ReleaseTime = 0.2;
+};
+
+// AHDSR エンベロープ
+class AHDSREnvelope {
+
+public:
+    // 遷移状態を表す State
+    enum class AHDSRState {
+        Attack, Hold, Decay, Sustain, Release
+    };
+
+    // ノートがオフになったときの処理
+    void NoteOff()
+    {
+        ElapsedTime = 0;
+        ReleaseStart = CurrentLevel;
+        CurrentState = AHDSRState::Release;
+    }
+
+    // エンベロープの状態遷移
+    void EnvUpdate (AHDSRConfig& ahdsr, double DeltaTime)
+    {
+        // 状態によって処理を分ける
+        switch (CurrentState)
+        {
+
+        case AHDSRState::Attack:
+            if (ElapsedTime < ahdsr.AttackTime)
+            {
+                CurrentLevel = Math::Lerp(0.0, 1.0, ElapsedTime / ahdsr.AttackTime);
+                break;
+            }
+            ElapsedTime = 0;
+            CurrentState = AHDSRState::Hold;
+            [[fallthrough]]; // そのまま Hold に移行する
+
+        case AHDSRState::Hold:
+            if (ElapsedTime < ahdsr.HoldTime)
+            {
+                CurrentLevel = 1.0;
+                break;
+            }
+            ElapsedTime = 0;
+            CurrentState = AHDSRState::Decay;
+            [[fallthrough]]; // そのまま Decay に移行する
+
+        case AHDSRState::Decay:
+            if (ElapsedTime < ahdsr.DecayTime)
+            {
+                CurrentLevel = Math::Lerp(1.0, ahdsr.SustainLevel, ElapsedTime / ahdsr.DecayTime);
+                break;
+            }
+            ElapsedTime = 0;
+            CurrentState = AHDSRState::Sustain;
+            [[fallthrough]];
+
+        case AHDSRState::Sustain:
+            CurrentLevel = ahdsr.SustainLevel;
+            break;
+
+        case AHDSRState::Release:
+            CurrentLevel = Math::Lerp(ReleaseStart, 0.0, 
+                                        ElapsedTime / ahdsr.ReleaseTime);
+            break;
+        }
+
+        // DeltaTime 秒だけ時間を進める
+        ElapsedTime += DeltaTime;
+    }
+
+private:
+    AHDSRState CurrentState = AHDSRState::Attack; // 現在のエンベロープの状態
+    double ElapsedTime = 0.0; // その状態に遷移してからの経過時間
+    double CurrentLevel = 0.0; // 鳴っている音の音量
+    double ReleaseStart = 0.0; // AHDSRState が Release になったときの音量
+};
+```
 
 ## 使用する技術
 
