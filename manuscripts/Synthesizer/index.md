@@ -141,7 +141,7 @@ DELAY 以外の5つを実装します。
 
 　エンベロープの部分を作っていきます。各パラメータ (Attack, Hold, Decay, Sustain, Release) は ``struct`` で以下のようにまとめて管理します。
 
-```
+```cpp
 struct AHDSRConfig {
     double AttackTime = 0.1;
     double HoldTime = 0.1;
@@ -153,7 +153,7 @@ struct AHDSRConfig {
 
 エンベロープ本体を、``AHDSREnvelope`` クラスとして実装します。以降はこの中身を書いていきます。
 
-```
+```cpp
 class AHDRSEnvelope
 {
     // エンベロープの処理を書いていく
@@ -162,7 +162,7 @@ class AHDRSEnvelope
 
 エンベロープでは、Attack、Hold、Decay、Sustain、Release の順に状態遷移して処理を行うようにします。まず、エンベロープの遷移状態を表す ``AHDSRState`` クラスを実装します。
 
-```
+```cpp
 public:
     class AHDSRState
     {
@@ -172,7 +172,7 @@ public:
 
 さらに、エンベロープ内で使用する変数を定義します。
 
-```
+```cpp
 private:
     AHDSRState CurrentState = AHDSRState::Attack; // 現在のエンベロープの状態
     double ElapsedTime = 0.0; // その状態に遷移してからの経過時間
@@ -182,7 +182,7 @@ private:
 
 ここからはエンベロープの各遷移状態における処理を書いていきます。これ以降は全て ``public`` です。 ``ADSRSConfig`` の各値と単位時間の値を表す ``DeltaTime`` を引数に持つ ``EnvUpdate``関数を定義します。 ``EnvUpdate`` 関数は、波形に遷移状態に応じた処理をするようにします。これを ``switch`` 文を使って実装します。
 
-```
+```cpp
 void EnvUpdate (AHDSRConfig &ahdsr, double DeltaTime)
 {
     switch (CurrentState)
@@ -196,7 +196,7 @@ void EnvUpdate (AHDSRConfig &ahdsr, double DeltaTime)
 
 Attack では、 ``CurrentLevel`` を ``AttackTime`` 秒かけて 0.0 から 1.0 まで増幅させます。Siv3D には、ベクトル A からベクトル B への線形補完ができる関数 ``Math::Lerp()`` 関数が用意されているのでそれを使います。
 
-```
+```cpp
 case AHDSRState::Attack:
     if (ElapsedTime < ahdsr.AttackTime) // ahdsr.AttackTime 秒かけて増幅
     {
@@ -211,7 +211,7 @@ case AHDSRState::Attack:
 
 Hold では、 ``CurrentLevel`` を ``HoldTime`` 秒の間 1.0 に維持します。
 
-```
+```cpp
 case AHDSRState::Hold:
     if (ElapsedTime < ahdsr.HoldTime)
     {
@@ -225,7 +225,7 @@ case AHDSRState::Hold:
 
 Decay では、 ``CurrentLevel`` を ``DecayTime`` 秒かけて ``SustainLevel`` まで減衰させます。こちらも ``Math::Lerp()`` 関数を用いて線形補完します。
 
-```
+```cpp
 case AHDSRState::Decay:
     if (ElapsedTime < ahdsr.DecayTime)
     {
@@ -240,7 +240,7 @@ case AHDSRState::Decay:
 
 Sustain では、ノートがオフになるまで ``CurrentLevel`` を ``SustainLevel`` に維持します。
 
-```
+```cpp
 case AHDSRState::Sustain:
     CurrentLevel = ahdsr.SustainLevel;
     break;
@@ -248,7 +248,7 @@ case AHDSRState::Sustain:
 
 Release では、ノートがオフになったときに ``ReleaseTime`` 秒かけて ``CurrentLevel`` を 0.0 まで減衰させます。こちらも ``Math::Lerp()`` を用いて線形補完します。
 
-```
+```cpp
 case AHDSRState::Release:
     CurrentLevel = Math::Lerp(ReleaseStart, 0.0, 
                                 ElapsedTime / ahdsr.ReleaseTime);
@@ -257,7 +257,7 @@ case AHDSRState::Release:
 
 最後に、処理が終わったら ``DeltaTime`` 秒だけ時間を進めるようにします。
 
-```
+```cpp
 ElapsedTime += DeltaTime;
 ```
 
@@ -265,7 +265,7 @@ ElapsedTime += DeltaTime;
 
 最後に、ノートがオフになったときに ``CurrentState`` を ``AHDSRState::Release`` にするための ``NoteOff()`` 関数を実装します。
 
-```
+```cpp
 void NoteOff()
 {
     ElapsedTime = 0;
@@ -276,7 +276,7 @@ void NoteOff()
 
 これで ``AHDSREnvelope`` クラスの実装が完了しました。全体像は以下の通りです。
 
-```
+```cpp:AHDSREnvelope.cpp
 // AHDSR の初期値
 struct AHDSRConfig {
     double AttackTime = 0.1;
@@ -361,13 +361,3 @@ private:
     double ReleaseStart = 0.0; // AHDSRState が Release になったときの音量
 };
 ```
-
-## 使用する技術
-
-言語：C++
-
-フレームワーク：OpenSiv3D v0.6.9
-
-
-
-
