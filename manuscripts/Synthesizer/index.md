@@ -246,13 +246,17 @@ case AHDSRState::Sustain:
     break;
 ```
 
-Release では、ノートがオフになったときに ``ReleaseTime`` 秒かけて ``CurrentLevel`` を 0.0 まで減衰させます。こちらも ``Math::Lerp()`` を用いて線形補完します。
+Release では、ノートがオフになったときに ``ReleaseTime`` 秒かけて ``CurrentLevel`` を 0.0 まで減衰させます。ReleaseTime 秒経ったら常に ``0.0`` を返すようにします。こちらも ``Math::Lerp()`` を用いて線形補完します。
 
 ```cpp
 case AHDSRState::Release:
-    CurrentLevel = Math::Lerp(ReleaseStart, 0.0, 
-                                ElapsedTime / ahdsr.ReleaseTime);
-    break;
+    if (ElapsedTime < ahdsr.ReleaseTime)
+    {
+        CurrentLevel = Math::Lerp(ReleaseStart, 0.0, 
+                                    ElapsedTime / ahdsr.ReleaseTime);
+    }
+    else CurrentLevel = 0.0;
+    break;          
 ```
 
 最後に、処理が終わったら ``DeltaTime`` 秒だけ時間を進めるようにします。
@@ -276,7 +280,7 @@ void NoteOff()
 
 これで ``AHDSREnvelope`` クラスの実装が完了しました。全体像は以下の通りです。
 
-```cpp:AHDSREnvelope.cpp
+```cpp
 // AHDSR の初期値
 struct AHDSRConfig {
     double AttackTime = 0.1;
@@ -347,8 +351,12 @@ public:
             break;
 
         case AHDSRState::Release:
-            CurrentLevel = Math::Lerp(ReleaseStart, 0.0, 
-                                        ElapsedTime / ahdsr.ReleaseTime);
+            if (ElapsedTime < ahdsr.ReleaseTime)
+            {
+                CurrentLevel = Math::Lerp(ReleaseStart, 0.0, 
+                                            ElapsedTime / ahdsr.ReleaseTime);
+            }
+            else CurrentLevel = 0.0;
             break;
         }
 
