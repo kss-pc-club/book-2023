@@ -1,6 +1,6 @@
 :root {
-  font-family: $font-serif;
-  // font-family: $font-sans-serif;
+  font-family: $font-family;
+  font-size: 0.95rem;
   font-weight: 400;
   line-height: 1.7;
 }
@@ -9,7 +9,8 @@ h1,
 h2,
 h3 {
   font-feature-settings: 'palt', 'calt';
-  font-family: $font-sans-serif;
+  font-family: $font-family;
+  font-weight: 700;
 }
 
 h1 {
@@ -29,7 +30,7 @@ h3 {
 }
 
 strong {
-  font-family: $font-sans-serif;
+  font-family: $font-family;
 }
 
 a {
@@ -47,6 +48,7 @@ a:hover {
 }
 
 p {
+  font-weight: 400;
   font-feature-settings: 'calt';
   text-align: justify;
 }
