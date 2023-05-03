@@ -5,6 +5,7 @@ module.exports = {
   size: "JIS-B5", // paper size.
   theme: "css/theme_print.css", // .css or local dir or npm package. default to undefined.
   entry: [
+    "index.md",
     "comments.md", // `title` is automatically guessed from the file (frontmatter > first heading).
     "questionnaire/index.md", // path can be absolute or relative to `entryContext`.
     "covid19-ibaraki/index.md",
