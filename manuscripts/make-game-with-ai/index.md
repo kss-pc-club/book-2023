@@ -12,7 +12,8 @@ author: tarokko
 こんにちは。
 6期生の tarokko です。
 先日、幕張メッセで行われたイベントのゲーム大会に行く機会があったのでニンテンドー3DSを持って行ったのですが、一日で12人のプレイヤーとすれ違いました。
-まだすれ違い通信をすることがあるのかと感動した反面、3DSというハードの時代の終わりを感じ、名残惜しく感じました。  
+まだすれ違い通信をすることがあるのかと感動した反面、3DSというハードの時代の終わりを感じ、名残惜しく感じました。
+
 本章では他の変態たち(誉め言葉)の記事を読んでよくわからないと思った人にも読みやすいように心がけ、プログラミングに関する知識がない人向けに注釈を入れた記事を書いていきますので、ぜひ最後までお読みいただけると幸いです。
 
 ## AIについて
@@ -54,6 +55,7 @@ author: tarokko
 
 始めに目を付けたゲームは **ドクターマリオ** です。
 このゲームについては以下の通りです。
+
 > このソフトは、1990年に発売されたファミリーコンピュータ用のアクションパズルゲームです。
 > ドクターとなったマリオの研究室のビンに発生した3種類のウィルスを、次々と投げ入れるカプセルを使って退治していきます。
 > ウィルスは同じ色のカプセルを縦か横に4個以上並べると消えます。
@@ -289,104 +291,107 @@ Copy code
 
 ![ドクターマリオ失敗作](./Image_DrMario_failed.png) 
 
-左上で絶えず生成される緑色のウイルス？達がぷかぷか浮いて、横に出現するカプセルが落ちるのをただひたすらに見守るゲームが完成しました。ちなみにカプセルが一番下まで到達すると Score が -100 されます。~~個人的にはこれはこれで意味不明すぎて面白いのでアリ。~~  
-このあとも試行錯誤を重ねてみたのですが、残念ながらこれが一番まともなコードでした。作ることができなかった原因としては初期状態で発生するウイルスのコードを組むことが難しいからだと考えました。  
+左上で絶えず生成される緑色のウイルス？達がぷかぷか浮いて、横に出現するカプセルが落ちるのをただひたすらに見守るゲームが完成しました。
+ちなみにカプセルが一番下まで到達すると Score が -100 されます。~~個人的にはこれはこれで意味不明すぎて面白いのでアリ。~~
+
+このあとも試行錯誤を重ねてみたのですが、残念ながらこれが一番まともなコードでした。作ることができなかった原因としては初期状態で発生するウイルスのコードを組むことが難しいからだと考えました。
 
 ### ぷよぷよ
 
-ドクターマリオは諦め、次に**ぷよぷよ**を作ってみようと思いました。このゲームについては以下の通りです。  
+ドクターマリオは諦め、次に**ぷよぷよ**を作ってみようと思いました。このゲームについては以下の通りです。
+
 > 同じ色の"ぷよ"を４つつなげて消していくシンプルなルールで、行く手をはばむゆかいなキャラクターたちと対戦していくアクションパズルゲームです。(セガ公式サイトから引用)
 
 ウイルスという障壁がなくなったのでどうにかなるだろうと思い、試してみました。
 できたコードとその実行結果がこちらです。
 
-```Javascript
+```html
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Puyo Puyo</title>
-    <style>
-      #field {
-        width: 220px;
-        height: 440px;
-        background-color: #ccc;
-        border: 2px solid #666;
+<head>
+  <title>Puyo Puyo</title>
+  <style>
+    #field {
+      width: 220px;
+      height: 440px;
+      background-color: #ccc;
+      border: 2px solid #666;
+    }
+    .block {
+      width: 20px;
+      height: 20px;
+      border: 1px solid #666;
+      box-sizing: border-box;
+      position: absolute;
+    }
+    .red {
+      background-color: red;
+    }
+    .green {
+      background-color: green;
+    }
+    .blue {
+      background-color: blue;
+    }
+    .yellow {
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+  <div id="field"></div>
+  <script>
+    const colors = ["red", "green", "blue", "yellow"];
+    let currentPuyo = null;
+    const field = [];
+    for (let i = 0; i < 22; i++) {
+      const row = [];
+      for (let j = 0; j < 12; j++) {
+        row.push(null);
       }
-      .block {
-        width: 20px;
-        height: 20px;
-        border: 1px solid #666;
-        box-sizing: border-box;
-        position: absolute;
-      }
-      .red {
-        background-color: red;
-      }
-      .green {
-        background-color: green;
-      }
-      .blue {
-        background-color: blue;
-      }
-      .yellow {
-        background-color: yellow;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="field"></div>
-    <script>
-      const colors = ["red", "green", "blue", "yellow"];
-      let currentPuyo = null;
-      const field = [];
-      for (let i = 0; i < 22; i++) {
-        const row = [];
-        for (let j = 0; j < 12; j++) {
-          row.push(null);
-        }
-        field.push(row);
-      }
-      const fieldElement = document.getElementById("field");
+      field.push(row);
+    }
+    const fieldElement = document.getElementById("field");
 
-      function render() {
-        for (let i = 0; i < 22; i++) {
-          for (let j = 0; j < 12; j++) {
-            const block = field[i][j];
-            if (block !== null) {
-              block.style.top = i * 20 + "px";
-              block.style.left = j * 20 + "px";
-            }
+    function render() {
+      for (let i = 0; i < 22; i++) {
+        for (let j = 0; j < 12; j++) {
+          const block = field[i][j];
+          if (block !== null) {
+            block.style.top = i * 20 + "px";
+            block.style.left = j * 20 + "px";
           }
         }
       }
+    }
 
-      function createPuyo() {
-        const puyo1 = document.createElement("div");
-        const puyo2 = document.createElement("div");
-        const color1 = colors[Math.floor(Math.random() * colors.length)];
-        const color2 = colors[Math.floor(Math.random() * colors.length)];
-        puyo1.classList.add("block", color1);
-        puyo2.classList.add("block", color2);
-        puyo2.style.top = "20px";
-        currentPuyo = [puyo1, puyo2];
-        fieldElement.appendChild(puyo1);
-        fieldElement.appendChild(puyo2);
-        puyo1.style.left = "80px";
-        puyo2.style.left = "100px";
-      }
+    function createPuyo() {
+      const puyo1 = document.createElement("div");
+      const puyo2 = document.createElement("div");
+      const color1 = colors[Math.floor(Math.random() * colors.length)];
+      const color2 = colors[Math.floor(Math.random() * colors.length)];
+      puyo1.classList.add("block", color1);
+      puyo2.classList.add("block", color2);
+      puyo2.style.top = "20px";
+      currentPuyo = [puyo1, puyo2];
+      fieldElement.appendChild(puyo1);
+      fieldElement.appendChild(puyo2);
+      puyo1.style.left = "80px";
+      puyo2.style.left = "100px";
+    }
 
-      function canMoveDown() {
-        const [puyo1, puyo2] = currentPuyo;
-        const [x1, y1] = getBlockCoords(puyo1);
-        const [x2, y2] = getBlockCoords(puyo2);
-        if (x2 >= 21 || field[x2 + 1][y2] !== null) {
-          return false;
-        }
-        if (x1 >= 21 || field[x1 + 1][y1] !== null) {
-          return false;
-        }
-        return true;
+    function canMoveDown() {
+      const [puyo1, puyo2] = currentPuyo;
+      const [x1, y1] = getBlockCoords(puyo1);
+      const [x2, y2] = getBlockCoords(puyo2);
+      if (x2 >= 21 || field[x2 + 1][y2] !== null) {
+        return false;
       }
+      if (x1 >= 21 || field[x1 + 1][y1] !== null) {
+        return false;
+      }
+      return true;
+    }
 
       function moveDown() {
         if (!canMoveDown()) {
@@ -400,45 +405,49 @@ Copy code
         field[x1][y1] = null;
         field[x2][y2] = null;
         field[x1 + 1][y1] = puyo1;
-field[x2 + 1][y2] = puyo2;
-render();
-setTimeout(moveDown, 500);
-}
-  function getBlockCoords(block) {
-    const top = parseInt(block.style.top);
-    const left = parseInt(block.style.left);
-    const x = Math.round(top / 20);
-    const y = Math.round(left / 20);
-    return [x, y];
-  }
+        field[x2 + 1][y2] = puyo2;
+        render();
+        setTimeout(moveDown, 500);
+      }
 
-  function fixCurrentPuyo() {
-    const [puyo1, puyo2] = currentPuyo;
-    const [x1, y1] = getBlockCoords(puyo1);
-    const [x2, y2] = getBlockCoords(puyo2);
-    field[x1][y1] = puyo1;
-    field[x2][y2] = puyo2;
-    currentPuyo = null;
-  }
+      function getBlockCoords(block) {
+        const top = parseInt(block.style.top);
+        const left = parseInt(block.style.left);
+        const x = Math.round(top / 20);
+        const y = Math.round(left / 20);
+        return [x, y];
+      }
 
-  createPuyo();
-  setTimeout(moveDown, 500);
-</script>
-</body>
+      function fixCurrentPuyo() {
+        const [puyo1, puyo2] = currentPuyo;
+        const [x1, y1] = getBlockCoords(puyo1);
+        const [x2, y2] = getBlockCoords(puyo2);
+        field[x1][y1] = puyo1;
+        field[x2][y2] = puyo2;
+        currentPuyo = null;
+      }
+
+      createPuyo();
+      setTimeout(moveDown, 500);
+      
+    </script>
+  </body>
 </html>
 ```
 ![ぷよぷよ失敗作](./Image_Puyopuyo_failed.png)
 
-パッと見それっぽくはなりましたが、ランダムな色のぷよが生成されるだけのプログラムになってしまいました。何度実行してもぷよの色が変わる以外の変化はなく、このあと試行錯誤してもぷよが動くことはなかったです。  
+パッと見それっぽくはなりましたが、ランダムな色のぷよが生成されるだけのプログラムになってしまいました。何度実行してもぷよの色が変わる以外の変化はなく、このあと試行錯誤してもぷよが動くことはなかったです。
 残念ながらこれも失敗に終わってしまいました。
 
 ### スネークゲーム
 
-落ち物パズルは難しいと思い、作るゲームのジャンルを大幅に変えてみました。Google で**ヘビゲーム**や**スネークゲーム**などと検索すると遊ぶことができるゲームを目標に作っていきます。  
+落ち物パズルは難しいと思い、作るゲームのジャンルを大幅に変えてみました。Google で**ヘビゲーム**や**スネークゲーム**などと検索すると遊ぶことができるゲームを目標に作っていきます。
+
 このゲームではプレイヤーがヘビを操作し、フィールドに存在するフルーツをたくさん食べることが目的のゲームです。フィールドの壁やヘビ自身の体にヘビの頭が衝突するとゲームオーバーとなります。
 また、フルーツを食べることでヘビの体が長くなり、だんだん難易度が上がっていくというものになっています。
 
 これまでの2つのゲームでは「Javascriptで動く〇〇のコードを出力して」から始まり、何度も出力をさせた結果のコードを載せていたのですが、今回はなんと最初の出力でこのコードとその実行結果が出力されました。
+
 ```Javascript
 <!DOCTYPE html>
 <html>
@@ -560,7 +569,8 @@ setTimeout(moveDown, 500);
 ![スネークゲーム1](./Image_snake1.jpg)
 ![スネークゲーム2](./Image_snake2.jpg)
 
-**ちゃんと動く！！！すげぇ！！！**  
+**ちゃんと動く！！！すげぇ！！！**
+
 画像しか載せることができないというのがとても歯がゆいですがこのゲームの最低限のルールをおさえたコードが一瞬で出てきました。
 そしてスネークゲームを作れというだけの命令だったにもかかわらず、出力されたコードにこれらの機能が実装されていたのには驚愕でした。
 - ヘビがフルーツを食べるとScoreが増える点
