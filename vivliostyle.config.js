@@ -9,7 +9,8 @@ module.exports = {
     "questionnaire/index.md", // path can be absolute or relative to `entryContext`.
     "covid19-ibaraki/index.md",
     "tech-and-human/index.md",
-    "make-game-with-ai/index.md"
+    "make-game-with-ai/index.md",
+    "font-generation/index.md",
     // {
     //   path: 'epigraph.md',
     //   title: 'Epigraph', // title can be overwritten (entry > file),
