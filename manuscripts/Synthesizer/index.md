@@ -341,3 +341,109 @@ private:
     double ReleaseStart = 0.0; // AHDSRState が Release になったときの音量
 };
 ```
+
+## 波形を生成する
+
+　生成した音声波形データとエンベロープのパラメータをもとにして実際に再生される波形を生成する ``WaveGenerator`` 関数を定義します。実装は以下の通りです。
+
+```cpp
+Wave RenderWave(double seconds, double amplitude, double frequency, AHDSRConfig &ahdsr)
+{
+    uint32 Seconds = static_cast<uint32>(floor(seconds));
+
+    const auto lengthOfSamples = Seconds * 
+                                    Wave::DefaultSampleRate;
+
+    Wave wave(lengthOfSamples);
+
+    AHDSREnvelope envelope;
+
+    float DeltaTime = 1.0f / Wave::DefaultSampleRate;
+
+    auto NoteOffTime = lengthOfSamples / 2;
+
+    for (uint32 i = 0; i < lengthOfSamples; ++i)
+    {
+        if (i == NoteOffTime)
+        {
+            envelope.NoteOff();
+        }
+        const double sec = 1.0f * i / Wave::DefaultSampleRate;
+        const double w = sin(Math::TwoPiF * frequency * sec) *  
+                        amplitude * envelope.GetCurrentLevel();
+        wave[i].left = wave[i].right = static_cast<float>(w);
+        envelope.EnvUpdate(ahdsr, DeltaTime);
+    }
+
+    return wave;
+}
+```
+
+　引数には、波形の秒数、振幅、周波数とエンベロープのパラメータを取り、音声波形データを返します。基本的な処理の流れは前の章で説明したものとほぼ同じです。秒数は GUI 作成の都合上 ``double`` 型で受け取りますが、波形の長さは整数値であるため床関数で小数点以下を切り捨てた上で ``uint32`` 型 (標準 C++ の ``unsigned int`` に該当) に変換しています。 大元の音声波形データを生成した後、for 文を回して ``WaveSample`` 1つ1つに対して音源の増幅・減衰処理をしています。なお、エンベロープの Release 処理については、ノートがオフになるタイミングを自由に設定できるところまで出来ていないので、内部側で波形の半分のところで固定しています。そのため、例えば波形の長さが3秒であれば、1.5秒のタイミングで Release 処理に入るようになっています。
+
+## 波形を再生する
+
+　いよいよ ``Main`` 関数の処理に入っていきます。とは言っても特に何かするわけではなく、``WaveGenerator`` 関数を呼び出して受け取った音声波形データを Siv3D の ``Audio`` クラスに渡して再生するだけです。あとは仮ですが GUI の処理も書いています。一行がかなり長いので、紙面の都合上見づらくなってしまいますがご容赦ください。
+
+```cpp
+// GUIの描画用
+const auto SliderHeight = 36;
+const auto SliderWidth = 400;
+const auto LabelWidth = 200;
+
+// const Vec2 offset = { 50, 300 };
+
+void Main()
+{
+    double amplitude = 0.2;
+    double frequency = 440.0;
+    double seconds = 3;
+
+    AHDSRConfig config(0.1, 0.1, 0.1, 0.6, 0.2);
+
+    Audio audio(WaveGenerator(seconds, amplitude, 
+                                        frequency, config));
+
+    while (System::Update())
+    {
+        Vec2 pos(20, 20 - SliderHeight);
+        SimpleGUI::Slider(U"amplitude : {:.2f}"_fmt(amplitude), amplitude, 0.0, 1.0, Vec2{ pos.x, pos.y += SliderHeight }, LabelWidth, SliderWidth);
+        SimpleGUI::Slider(U"frequency : {:.0f}"_fmt(frequency), frequency, 100.0, 1000.0, Vec2{ pos.x, pos.y += SliderHeight }, LabelWidth, SliderWidth);
+        SimpleGUI::Slider(U"seconds : {:.0f}"_fmt(seconds), seconds, 1, 10, Vec2{pos.x, pos.y += SliderHeight}, LabelWidth, SliderWidth);
+        SimpleGUI::Slider(U"Attack : {:.0}"_fmt(config.AttackTime), config.AttackTime, 0.1, 3.0, Vec2{ pos.x, pos.y += SliderHeight }, LabelWidth, SliderWidth);
+        SimpleGUI::Slider(U"Hold : {:.0}"_fmt(config.HoldTime), config.HoldTime, 0.1, 3.0, Vec2{ pos.x, pos.y += SliderHeight }, LabelWidth, SliderWidth);
+        SimpleGUI::Slider(U"Decay : {:.0}"_fmt(config.DecayTime), config.DecayTime, 0.1, 3.0, Vec2{ pos.x, pos.y += SliderHeight }, LabelWidth, SliderWidth);
+        SimpleGUI::Slider(U"Sustain : {:.0}"_fmt(config.SustainLevel), config.SustainLevel, 0.0, 1.0, Vec2{ pos.x, pos.y += SliderHeight }, LabelWidth, SliderWidth);
+        SimpleGUI::Slider(U"Release : {:.0}"_fmt(config.ReleaseTime), config.ReleaseTime, 0.1, 3.0, Vec2{ pos.x, pos.y += SliderHeight }, LabelWidth, SliderWidth);
+
+        if (SimpleGUI::Button(U"波形を再生成", 
+                        Vec2{ pos.x, pos.y += SliderHeight }))
+        {
+            audio = Audio(WaveGenerator(seconds, amplitude, 
+                                            frequency, config));
+            audio.play();
+        }
+    }
+}
+```
+
+　また、(仮ですが) GUI は以下のようになっています。画像の各値を自由に変更できるようにしています。
+
+![シンセサイザのGUI](Synth_GUI.png)
+
+## おわりに
+
+　オシレータ1つとエンベロープというごくごくシンプルなものにはなりますが、なんとかシンセサイザを作ることができました。音響工学の知識が皆無であるため、最初は開発の方針すらも立ちませんでしたが、色々調べてなんとか作り上げることができ嬉しく思います。ゆくゆくは実際の DAW に VST プラグインとして使えるようにして、私の作曲に生かせるようなものが作れたらと思います。また、大学で研究したいと思っている音響工学と計算機科学においても、何か生かせればと思います。
+　最後になりますが、拙い文章であったにもかかわらずここまで呼んで下さりありがとうございました。去年に引き続き、部誌の執筆に参加できたことを嬉しく思います。来年は ~~(浪人しなければ)~~ 大学生になりますが、部誌が存続するのであれば是非参加したいと思います。またどこかでお会いできることを楽しみにしています。ありがとうございました。
+
+### 参考文献
+
+ソフトウェアシンセサイザーを作る　その１：サイン波でMIDIを再生する  
+(https://qiita.com/agehama_/items/7da430491400e9a2b6a7)
+
+### Special Thanks
+
+- Siv3D
+- Reputeless (Siv3D 開発者)
+- agehama (参考文献執筆者)
+- この記事を読んでくださった方々
