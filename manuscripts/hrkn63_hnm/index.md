@@ -24,7 +24,7 @@ https://github.com/hrkn63-hnm/nikoniko-board
 ![弾幕コメントのいい例](https://media.discordapp.net/attachments/757627473427955867/1104786970867159111/2023-05-08_0.04.55.png )
 
 【実況】アマガミやるお（＾ω＾）part1/うんこちゃん
-(https://www.nicovideo.jp/watch/sm27054304?ref=search_key_video&playlist=eyJ0eXBlIjoic2VhcmNoIiwiY29udGV4dCI6eyJrZXl3b3JkIjoiXHU1MmEwXHU4NWU0XHU3ZDE0XHU0ZTAwIiwic29ydEtleSI6ImhvdCIsInNvcnRPcmRlciI6Im5vbmUiLCJwYWdlIjoxLCJwYWdlU2l6ZSI6MzJ9fQ&ss_pos=6&ss_id=08564b7d-9002-4a92-bdcc-cc988162930c )より
+(https://www.nicovideo.jp/watch/sm27054304 )より
 
 このニコニコ動画のような熱いコメントが横から流れる掲示板。それが「ニコニコ動画風コメント掲示板２」です。
 
