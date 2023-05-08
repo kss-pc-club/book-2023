@@ -69,181 +69,181 @@ author: tarokko
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Doctor Mario</title>
-	<style>
-		#gameboard {
-			position: relative;
-			width: 240px;
-			height: 480px;
-			border: 2px solid black;
-		}
-		.virus {
-			position: absolute;
-			width: 24px;
-			height: 24px;
-			background-color: #00FF00;
-			border: 2px solid black;
-			border-radius: 50%;
-			top: 0;
-			left: 0;
-			animation: virusMovement 0.8s ease-in-out infinite alternate;
-		}
-		.pill {
-			position: absolute;
-			width: 24px;
-			height: 48px;
-			background-color: #FFFF00;
-			border: 2px solid black;
-			border-radius: 8px;
-		}
-		.score {
-			position: absolute;
-			top: 490px;
-			left: 0;
-		}
-		.level {
-			position: absolute;
-			top: 490px;
-			right: 0;
-		}
-		@keyframes virusMovement {
-			from {
-				transform: translate(0, 0);
-			}
-			to {
-				transform: translate(0, 24px);
-			}
-		}
-	</style>
+  <title>Doctor Mario</title>
+  <style>
+    #gameboard {
+      position: relative;
+      width: 240px;
+      height: 480px;
+      border: 2px solid black;
+    }
+    .virus {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background-color: #00FF00;
+      border: 2px solid black;
+      border-radius: 50%;
+      top: 0;
+      left: 0;
+      animation: virusMovement 0.8s ease-in-out infinite alternate;
+    }
+    .pill {
+      position: absolute;
+      width: 24px;
+      height: 48px;
+      background-color: #FFFF00;
+      border: 2px solid black;
+      border-radius: 8px;
+    }
+    .score {
+      position: absolute;
+      top: 490px;
+      left: 0;
+    }
+    .level {
+      position: absolute;
+      top: 490px;
+      right: 0;
+    }
+    @keyframes virusMovement {
+      from {
+        transform: translate(0, 0);
+      }
+      to {
+        transform: translate(0, 24px);
+      }
+    }
+  </style>
 </head>
 <body>
-	<div id="gameboard"></div>
-	<div class="score" id="score"></div>
-	<div class="level" id="level"></div>s
-	<script>
-		(function () {
-			const VIRUS_SIZE = 24;
-			const PILL_SIZE = 24;
-			const ROW_SIZE = 24;
-			const CREATE_VIRUS_INTERVAL = 1000;
-			const FALLING_INTERVAL = 500;
+  <div id="gameboard"></div>
+  <div class="score" id="score"></div>
+  <div class="level" id="level"></div>s
+  <script>
+    (function () {
+      const VIRUS_SIZE = 24;
+      const PILL_SIZE = 24;
+      const ROW_SIZE = 24;
+      const CREATE_VIRUS_INTERVAL = 1000;
+      const FALLING_INTERVAL = 500;
 
-			let gameboard = document.getElementById("gameboard");
-			let scoreElement = document.getElementById("score");
-			let levelElement = document.getElementById("level");
+      let gameboard = document.getElementById("gameboard");
+      let scoreElement = document.getElementById("score");
+      let levelElement = document.getElementById("level");
 
-			let score = 0;
-			let level = 1;
-			let virusCount = 0;
-			let pillFalling = false;
-			let pillInterval;
+      let score = 0;
+      let level = 1;
+      let virusCount = 0;
+      let pillFalling = false;
+      let pillInterval;
 
-			let createVirusInterval;
+      let createVirusInterval;
 
-			function createVirus() {
-				let row = document.createElement("div");
-				row.classList.add("row");
-				gameboard.appendChild(row);
+      function createVirus() {
+        let row = document.createElement("div");
+        row.classList.add("row");
+        gameboard.appendChild(row);
 
-				let virusPosition = Math.floor(Math.random() * 10);
-				for (let i = 0; i < 10; i++) {
-					let virus = document.createElement("div");
-					if (i === virusPosition) {
-						virus.classList.add("virus");
-					}
-					row.appendChild(virus);
-				}
+        let virusPosition = Math.floor(Math.random() * 10);
+        for (let i = 0; i < 10; i++) {
+          let virus = document.createElement("div");
+          if (i === virusPosition) {
+            virus.classList.add("virus");
+          }
+          row.appendChild(virus);
+        }
 
-				virusCount++;
+        virusCount++;
 
-				if (virusCount === 20) {
-					clearInterval(createVirusInterval);
-					pillFalling = true;
-					pillInterval = setInterval(movePillDown, FALLING_INTERVAL);
-				}
-			}
+        if (virusCount === 20) {
+          clearInterval(createVirusInterval);
+          pillFalling = true;
+          pillInterval = setInterval(movePillDown, FALLING_INTERVAL);
+        }
+      }
 
-			function createPill() {
-				let pill = document.createElement("div");
-				pill.classList.add("pill");
-				pill.style.top = "0px";
-				pill.style.left = "96px";
-				gameboard.appendChild(pill);
-				pillFalling = true;
-			}
+      function createPill() {
+        let pill = document.createElement("div");
+        pill.classList.add("pill");
+        pill.style.top = "0px";
+        pill.style.left = "96px";
+        gameboard.appendChild(pill);
+        pillFalling = true;
+      }
 
-			function movePill(direction) {
-				let pill = document.querySelector(".pill");
-				let left = parseInt(pill.style.left);
-				if (left + direction * PILL_SIZE < 0 || left + direction * PILL_SIZE > 216) {
-					return;
-				}
-				pill.style.left = left + direction * PILL_SIZE + "px";
-			}
+      function movePill(direction) {
+        let pill = document.querySelector(".pill");
+        let left = parseInt(pill.style.left);
+        if (left + direction * PILL_SIZE < 0 || left + direction * PILL_SIZE > 216) {
+          return;
+        }
+        pill.style.left = left + direction * PILL_SIZE + "px";
+      }
 
-			function movePillDown() {
-				let pill = document.querySelector(".pill");
-				let top = parseInt(pill.style.top);
-				let left = parseInt(pill.style.left);
-				let pillRow = Math.floor((top + PILL_SIZE) / ROW_SIZE);
-				let pillColumn = Math.floor(left / VIRUS_SIZE);
-				let pillBottom = (pillRow + 1) * ROW_SIZE - PILL_SIZE;
-				let pillLeft = pillColumn * VIRUS_SIZE;
-				let viruses = document.querySelectorAll(".row:nth-child(-n+" + pillRow + ") .virus");
-				let virus = null;
-				for (let i = 0; i < viruses.length; i++) {
-					let top = parseInt(viruses[i].style.top);
-					let left = parseInt(viruses[i].style.left);
-					if (top === pillBottom && left === pillLeft) {
-						virus = viruses[i];
-						break;
-					}
-				}
-				if (virus !== null) {
-					gameboard.removeChild(pill);
-					clearInterval(pillInterval);
-					pillFalling = false;
-					virusCount--;
-					if (virusCount === 0) {
-						level++;
-						levelElement.innerHTML = "Level: " + level;
-						createVirusInterval = setInterval(createVirus, CREATE_VIRUS_INTERVAL);
-					}
-				} else if (top + PILL_SIZE < 480) {
-					pill.style.top = top + PILL_SIZE + "px";
-				} else {
-					gameboard.removeChild(pill);
-					clearInterval(pillInterval);
-					pillFalling = false;
-					score -= 100;
-					scoreElement.innerHTML = "Score: " + score;
-				}
-			}
+      function movePillDown() {
+        let pill = document.querySelector(".pill");
+        let top = parseInt(pill.style.top);
+        let left = parseInt(pill.style.left);
+        let pillRow = Math.floor((top + PILL_SIZE) / ROW_SIZE);
+        let pillColumn = Math.floor(left / VIRUS_SIZE);
+        let pillBottom = (pillRow + 1) * ROW_SIZE - PILL_SIZE;
+        let pillLeft = pillColumn * VIRUS_SIZE;
+        let viruses = document.querySelectorAll(".row:nth-child(-n+" + pillRow + ") .virus");
+        let virus = null;
+        for (let i = 0; i < viruses.length; i++) {
+          let top = parseInt(viruses[i].style.top);
+          let left = parseInt(viruses[i].style.left);
+          if (top === pillBottom && left === pillLeft) {
+            virus = viruses[i];
+            break;
+          }
+        }
+        if (virus !== null) {
+          gameboard.removeChild(pill);
+          clearInterval(pillInterval);
+          pillFalling = false;
+          virusCount--;
+          if (virusCount === 0) {
+            level++;
+            levelElement.innerHTML = "Level: " + level;
+            createVirusInterval = setInterval(createVirus, CREATE_VIRUS_INTERVAL);
+          }
+        } else if (top + PILL_SIZE < 480) {
+          pill.style.top = top + PILL_SIZE + "px";
+        } else {
+          gameboard.removeChild(pill);
+          clearInterval(pillInterval);
+          pillFalling = false;
+          score -= 100;
+          scoreElement.innerHTML = "Score: " + score;
+        }
+      }
 
-			function startGame() {
-				scoreElement.innerHTML = "Score: " + score;
-				levelElement.innerHTML = "Level: " + level;
-				createVirusInterval = setInterval(createVirus, CREATE_VIRUS_INTERVAL);
-			}
+      function startGame() {
+        scoreElement.innerHTML = "Score: " + score;
+        levelElement.innerHTML = "Level: " + level;
+        createVirusInterval = setInterval(createVirus, CREATE_VIRUS_INTERVAL);
+      }
 
-			document.addEventListener("keydown", function (event) {
-				if (!pillFalling) {
-					createPill();
-					return;
-				}
-				switch (event.keyCode) {
-					case 37:
-						movePill(-1);
-						break;
-					case 39:
-						movePill(1);
-						break;
-				}
-			});
+      document.addEventListener("keydown", function (event) {
+        if (!pillFalling) {
+          createPill();
+          return;
+        }
+        switch (event.keyCode) {
+          case 37:
+            movePill(-1);
+            break;
+          case 39:
+            movePill(1);
+            break;
+        }
+      });
 
-			startGame();
-		})();
-	</script>
+      startGame();
+    })();
+  </script>
 </body>
 </html>
 ```
@@ -270,127 +270,127 @@ author: tarokko
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Puyo Puyo</title>
-	<style>
-		#field {
-			width: 220px;
-			height: 440px;
-			background-color: #ccc;
-			border: 2px solid #666;
-		}
-		.block {
-			width: 20px;
-			height: 20px;
-			border: 1px solid #666;
-			box-sizing: border-box;
-			position: absolute;
-		}
-		.red {
-			background-color: red;
-		}
-		.green {
-			background-color: green;
-		}
-		.blue {
-			background-color: blue;
-		}
-		.yellow {
-			background-color: yellow;
-		}
-	</style>
+  <title>Puyo Puyo</title>
+  <style>
+    #field {
+      width: 220px;
+      height: 440px;
+      background-color: #ccc;
+      border: 2px solid #666;
+    }
+    .block {
+      width: 20px;
+      height: 20px;
+      border: 1px solid #666;
+      box-sizing: border-box;
+      position: absolute;
+    }
+    .red {
+      background-color: red;
+    }
+    .green {
+      background-color: green;
+    }
+    .blue {
+      background-color: blue;
+    }
+    .yellow {
+      background-color: yellow;
+    }
+  </style>
 </head>
 <body>
-	<div id="field"></div>
-	<script>
-		const colors = ["red", "green", "blue", "yellow"];
-		let currentPuyo = null;
-		const field = [];
-		for (let i = 0; i < 22; i++) {
-			const row = [];
-			for (let j = 0; j < 12; j++) {
-				row.push(null);
-			}
-			field.push(row);
-		}
-		const fieldElement = document.getElementById("field");
+  <div id="field"></div>
+  <script>
+    const colors = ["red", "green", "blue", "yellow"];
+    let currentPuyo = null;
+    const field = [];
+    for (let i = 0; i < 22; i++) {
+      const row = [];
+      for (let j = 0; j < 12; j++) {
+        row.push(null);
+      }
+      field.push(row);
+    }
+    const fieldElement = document.getElementById("field");
 
-		function render() {
-			for (let i = 0; i < 22; i++) {
-				for (let j = 0; j < 12; j++) {
-					const block = field[i][j];
-					if (block !== null) {
-						block.style.top = i * 20 + "px";
-						block.style.left = j * 20 + "px";
-					}
-				}
-			}
-		}
+    function render() {
+      for (let i = 0; i < 22; i++) {
+        for (let j = 0; j < 12; j++) {
+          const block = field[i][j];
+          if (block !== null) {
+            block.style.top = i * 20 + "px";
+            block.style.left = j * 20 + "px";
+          }
+        }
+      }
+    }
 
-		function createPuyo() {
-			const puyo1 = document.createElement("div");
-			const puyo2 = document.createElement("div");
-			const color1 = colors[Math.floor(Math.random() * colors.length)];
-			const color2 = colors[Math.floor(Math.random() * colors.length)];
-			puyo1.classList.add("block", color1);
-			puyo2.classList.add("block", color2);
-			puyo2.style.top = "20px";
-			currentPuyo = [puyo1, puyo2];
-			fieldElement.appendChild(puyo1);
-			fieldElement.appendChild(puyo2);
-			puyo1.style.left = "80px";
-			puyo2.style.left = "100px";
-		}
+    function createPuyo() {
+      const puyo1 = document.createElement("div");
+      const puyo2 = document.createElement("div");
+      const color1 = colors[Math.floor(Math.random() * colors.length)];
+      const color2 = colors[Math.floor(Math.random() * colors.length)];
+      puyo1.classList.add("block", color1);
+      puyo2.classList.add("block", color2);
+      puyo2.style.top = "20px";
+      currentPuyo = [puyo1, puyo2];
+      fieldElement.appendChild(puyo1);
+      fieldElement.appendChild(puyo2);
+      puyo1.style.left = "80px";
+      puyo2.style.left = "100px";
+    }
 
-		function canMoveDown() {
-			const [puyo1, puyo2] = currentPuyo;
-			const [x1, y1] = getBlockCoords(puyo1);
-			const [x2, y2] = getBlockCoords(puyo2);
-			if (x2 >= 21 || field[x2 + 1][y2] !== null) {
-				return false;
-			}
-			if (x1 >= 21 || field[x1 + 1][y1] !== null) {
-				return false;
-			}
-			return true;
-		}
+    function canMoveDown() {
+      const [puyo1, puyo2] = currentPuyo;
+      const [x1, y1] = getBlockCoords(puyo1);
+      const [x2, y2] = getBlockCoords(puyo2);
+      if (x2 >= 21 || field[x2 + 1][y2] !== null) {
+        return false;
+      }
+      if (x1 >= 21 || field[x1 + 1][y1] !== null) {
+        return false;
+      }
+      return true;
+    }
 
-		function moveDown() {
-			if (!canMoveDown()) {
-				fixCurrentPuyo();
-				createPuyo();
-				return;
-			}
-			const [puyo1, puyo2] = currentPuyo;
-			const [x1, y1] = getBlockCoords(puyo1);
-			const [x2, y2] = getBlockCoords(puyo2);
-			field[x1][y1] = null;
-			field[x2][y2] = null;
-			field[x1 + 1][y1] = puyo1;
-			field[x2 + 1][y2] = puyo2;
-			render();
-			setTimeout(moveDown, 500);
-		}
+    function moveDown() {
+      if (!canMoveDown()) {
+        fixCurrentPuyo();
+        createPuyo();
+        return;
+      }
+      const [puyo1, puyo2] = currentPuyo;
+      const [x1, y1] = getBlockCoords(puyo1);
+      const [x2, y2] = getBlockCoords(puyo2);
+      field[x1][y1] = null;
+      field[x2][y2] = null;
+      field[x1 + 1][y1] = puyo1;
+      field[x2 + 1][y2] = puyo2;
+      render();
+      setTimeout(moveDown, 500);
+    }
 
-		function getBlockCoords(block) {
-			const top = parseInt(block.style.top);
-			const left = parseInt(block.style.left);
-			const x = Math.round(top / 20);
-			const y = Math.round(left / 20);
-			return [x, y];
-		}
+    function getBlockCoords(block) {
+      const top = parseInt(block.style.top);
+      const left = parseInt(block.style.left);
+      const x = Math.round(top / 20);
+      const y = Math.round(left / 20);
+      return [x, y];
+    }
 
-		function fixCurrentPuyo() {
-			const [puyo1, puyo2] = currentPuyo;
-			const [x1, y1] = getBlockCoords(puyo1);
-			const [x2, y2] = getBlockCoords(puyo2);
-			field[x1][y1] = puyo1;
-			field[x2][y2] = puyo2;
-			currentPuyo = null;
-		}
+    function fixCurrentPuyo() {
+      const [puyo1, puyo2] = currentPuyo;
+      const [x1, y1] = getBlockCoords(puyo1);
+      const [x2, y2] = getBlockCoords(puyo2);
+      field[x1][y1] = puyo1;
+      field[x2][y2] = puyo2;
+      currentPuyo = null;
+    }
 
-  	createPuyo();
-  	setTimeout(moveDown, 500);
-	</script>
+    createPuyo();
+    setTimeout(moveDown, 500);
+  </script>
 </body>
 </html>
 ```
@@ -415,117 +415,117 @@ Google で**ヘビゲーム**や**スネークゲーム**などと検索する�
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Snake Game</title>
-	<style>
-		canvas {
-			border: 1px solid black;
-		}
-	</style>
+  <title>Snake Game</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
 </head>
 <body>
-	<canvas id="gameCanvas" width="400" height="400"></canvas>
-	<script>
-		// ゲーム画面の設定
-		var canvas = document.getElementById("gameCanvas");
-		var ctx = canvas.getContext("2d");
-		var blockSize = 10;
-		var width = canvas.width / blockSize;
-		var height = canvas.height / blockSize;
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <script>
+    // ゲーム画面の設定
+    var canvas = document.getElementById("gameCanvas");
+    var ctx = canvas.getContext("2d");
+    var blockSize = 10;
+    var width = canvas.width / blockSize;
+    var height = canvas.height / blockSize;
 
-		// スネークの初期位置
-		var snake = [];
-		snake[0] = {x: 5, y: 5};
+    // スネークの初期位置
+    var snake = [];
+    snake[0] = {x: 5, y: 5};
 
-		// フルーツの初期位置
-		var fruit = {x: Math.floor(Math.random() * width), y: Math.floor(Math.random() * height)};
+    // フルーツの初期位置
+    var fruit = {x: Math.floor(Math.random() * width), y: Math.floor(Math.random() * height)};
 
-		// スコアとゲームオーバーの設定
-		var score = 0;
-		var gameOver = false;
+    // スコアとゲームオーバーの設定
+    var score = 0;
+    var gameOver = false;
 
-		// ゲームループ
-		function gameLoop() {
-			if (gameOver) {
-				return;
-			}
+    // ゲームループ
+    function gameLoop() {
+      if (gameOver) {
+        return;
+      }
 
-			setTimeout(function() {
-				requestAnimationFrame(gameLoop);
-				draw();
-			}, 100);
-		}
+      setTimeout(function() {
+        requestAnimationFrame(gameLoop);
+        draw();
+      }, 100);
+    }
 
-		// 描画
-		function draw() {
-			// スネークの移動
-			var head = {x: snake[0].x, y: snake[0].y};
-			if (direction === "right") {
-				head.x++;
-			} else if (direction === "left") {
-				head.x--;
-			} else if (direction === "up") {
-				head.y--;
-			} else if (direction === "down") {
-				head.y++;
-			}
-			snake.unshift(head);
+    // 描画
+    function draw() {
+      // スネークの移動
+      var head = {x: snake[0].x, y: snake[0].y};
+      if (direction === "right") {
+        head.x++;
+      } else if (direction === "left") {
+        head.x--;
+      } else if (direction === "up") {
+        head.y--;
+      } else if (direction === "down") {
+        head.y++;
+      }
+      snake.unshift(head);
 
-			// フルーツを取得した場合
-			if (head.x === fruit.x && head.y === fruit.y) {
-				score++;
-				fruit = {x: Math.floor(Math.random() * width), y: Math.floor(Math.random() * height)};
-			} else {
-				snake.pop();
-			}
+      // フルーツを取得した場合
+      if (head.x === fruit.x && head.y === fruit.y) {
+        score++;
+        fruit = {x: Math.floor(Math.random() * width), y: Math.floor(Math.random() * height)};
+      } else {
+        snake.pop();
+      }
 
-			// ゲームオーバーの判定
-			if (head.x < 0 || head.x >= width || head.y < 0 || head.y >= height) {
-				gameOver = true;
-			}
-			for (var i = 1; i < snake.length; i++) {
-				if (snake[i].x === head.x && snake[i].y === head.y) {
-					gameOver = true;
-				}
-			}
+      // ゲームオーバーの判定
+      if (head.x < 0 || head.x >= width || head.y < 0 || head.y >= height) {
+        gameOver = true;
+      }
+      for (var i = 1; i < snake.length; i++) {
+        if (snake[i].x === head.x && snake[i].y === head.y) {
+          gameOver = true;
+        }
+      }
 
-			// 背景を描画
-			ctx.fillStyle = "#ccc";
-			ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // 背景を描画
+      ctx.fillStyle = "#ccc";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-			// スネークを描画
-			ctx.fillStyle = "green";
-			for (var i = 0; i < snake.length; i++) {
-				ctx.fillRect(snake[i].x * blockSize, snake[i].y * blockSize, blockSize, blockSize);
-			}
+      // スネークを描画
+      ctx.fillStyle = "green";
+      for (var i = 0; i < snake.length; i++) {
+        ctx.fillRect(snake[i].x * blockSize, snake[i].y * blockSize, blockSize, blockSize);
+      }
 
-			// フルーツを描画
-			ctx.fillStyle
-			ctx.fillStyle = "red";
-			ctx.fillRect(fruit.x * blockSize, fruit.y * blockSize, blockSize, blockSize);
+      // フルーツを描画
+      ctx.fillStyle
+      ctx.fillStyle = "red";
+      ctx.fillRect(fruit.x * blockSize, fruit.y * blockSize, blockSize, blockSize);
 
-			// スコアを表示
-			ctx.fillStyle = "black";
-			ctx.font = "20px Arial";
-			ctx.fillText("Score: " + score, 10, 30);
-		}
+      // スコアを表示
+      ctx.fillStyle = "black";
+      ctx.font = "20px Arial";
+      ctx.fillText("Score: " + score, 10, 30);
+    }
 
-		// キーボード入力
-		var direction = "right";
-		document.addEventListener("keydown", function(event) {
-			if (event.keyCode === 37 && direction !== "right") {
-				direction = "left";
-			} else if (event.keyCode === 38 && direction !== "down") {
-				direction = "up";
-			} else if (event.keyCode === 39 && direction !== "left") {
-				direction = "right";
-			} else if (event.keyCode === 40 && direction !== "up") {
-				direction = "down";
-			}
-		});
+    // キーボード入力
+    var direction = "right";
+    document.addEventListener("keydown", function(event) {
+      if (event.keyCode === 37 && direction !== "right") {
+        direction = "left";
+      } else if (event.keyCode === 38 && direction !== "down") {
+        direction = "up";
+      } else if (event.keyCode === 39 && direction !== "left") {
+        direction = "right";
+      } else if (event.keyCode === 40 && direction !== "up") {
+        direction = "down";
+      }
+    });
 
-		// ゲームを開始
-		gameLoop();
-	</script>
+    // ゲームを開始
+    gameLoop();
+  </script>
 </body>
 </html>
 ```
