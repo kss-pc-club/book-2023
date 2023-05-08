@@ -13,22 +13,22 @@ author: 張替健太/hrkn63_hnm
 僕の記事では、おそらく文化祭当日に展示されているであろう「ニコニコ動画風コメント掲示板２」について紹介します。
 
 ソースコードはこちらです。
-https://github.com/hrkn63-hnm/nikoniko-board
+https://github.com/hrkn63-hnm/nikoniko-board 
 
 ## ニコニコ動画風コメント掲示板２とは
 
 まずは「ニコニコ動画風コメント掲示板２」の「ニコニコ動画風」について。
 
-ニコニコ動画(https://www.nicovideo.jp/)とは、YouTubeと同じ動画投稿プラットフォームの一つです。誰かがあげた動画を他の誰かが閲覧して楽しむことができます。ニコニコ動画の醍醐味といえば、この弾幕コメントです。
+ニコニコ動画(https://www.nicovideo.jp/ )とは、YouTubeと同じ動画投稿プラットフォームの一つです。誰かがあげた動画を他の誰かが閲覧して楽しむことができます。ニコニコ動画の醍醐味といえば、この弾幕コメントです。
 
-![](https://media.discordapp.net/attachments/757627473427955867/1104786970867159111/2023-05-08_0.04.55.png)
+![弾幕コメントのいい例](https://media.discordapp.net/attachments/757627473427955867/1104786970867159111/2023-05-08_0.04.55.png )
 
 【実況】アマガミやるお（＾ω＾）part1/うんこちゃん
-(https://www.nicovideo.jp/watch/sm27054304?ref=search_key_video&playlist=eyJ0eXBlIjoic2VhcmNoIiwiY29udGV4dCI6eyJrZXl3b3JkIjoiXHU1MmEwXHU4NWU0XHU3ZDE0XHU0ZTAwIiwic29ydEtleSI6ImhvdCIsInNvcnRPcmRlciI6Im5vbmUiLCJwYWdlIjoxLCJwYWdlU2l6ZSI6MzJ9fQ&ss_pos=6&ss_id=08564b7d-9002-4a92-bdcc-cc988162930c)より
+(https://www.nicovideo.jp/watch/sm27054304?ref=search_key_video&playlist=eyJ0eXBlIjoic2VhcmNoIiwiY29udGV4dCI6eyJrZXl3b3JkIjoiXHU1MmEwXHU4NWU0XHU3ZDE0XHU0ZTAwIiwic29ydEtleSI6ImhvdCIsInNvcnRPcmRlciI6Im5vbmUiLCJwYWdlIjoxLCJwYWdlU2l6ZSI6MzJ9fQ&ss_pos=6&ss_id=08564b7d-9002-4a92-bdcc-cc988162930c )より
 
 このニコニコ動画のような熱いコメントが横から流れる掲示板。それが「ニコニコ動画風コメント掲示板２」です。
 
-![](https://media.discordapp.net/attachments/757627473427955867/1105048455430295613/nikoniko-board.vercel.app__1.png)
+![実際のプロダクト](https://media.discordapp.net/attachments/757627473427955867/1105048455430295613/nikoniko-board.vercel.app__1.png )
 
 画像は開発中のものです。実際のものとは少し違うかも。
 
@@ -75,7 +75,7 @@ https://github.com/hrkn63-hnm/nikoniko-board
 ### 3.コメントを横に流すCSS
 実は、`ChatGPT`に聞いてCSSをコピペしました。多少の改善は行なったものの、凄すぎます。
 
-![](https://media.discordapp.net/attachments/757627473427955867/1105050032270487613/CSS_-_chat.openai.com.png)
+![ChatGPTの功績](https://media.discordapp.net/attachments/757627473427955867/1105050032270487613/CSS_-_chat.openai.com.png )
 
 ## おわりに
 自分で好きなことをやっているうちに、知識なんて自然とつくもんです。
