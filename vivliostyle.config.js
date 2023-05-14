@@ -8,6 +8,7 @@ module.exports = {
     "comments.md", // `title` is automatically guessed from the file (frontmatter > first heading).
     "questionnaire/index.md", // path can be absolute or relative to `entryContext`.
     "covid19-ibaraki/index.md",
+    "tsukuba-ac/index.md"
     "tech-and-human/index.md",
     "make-game-with-ai/index.md",
     "font-generation/index.md",
