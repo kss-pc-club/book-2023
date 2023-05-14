@@ -3,9 +3,9 @@ title: 学生のキャッシュレス決済を考える
 author: 香風智乃
 ---
 
-<span class="author">Chino Kafu</span>
-
 # 学生のキャッシュレス決済を考える
+
+<span class="author">Chino Kafu</span>
 
 ## はじめに - 学生こそ決済手段を意識するべきである
 
