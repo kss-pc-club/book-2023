@@ -13,6 +13,7 @@ module.exports = {
     "make-game-with-ai/index.md",
     "font-generation/index.md",
     "eno1220/index.md",
+    "cashless-payment/index.md",
     // {
     //   path: 'epigraph.md',
     //   title: 'Epigraph', // title can be overwritten (entry > file),
