@@ -1,10 +1,7 @@
 @mixin page-top-style() {
   content: '';
   margin-bottom: 8mm;
-  background-image: linear-gradient(-45deg,
-    #3e3e3e 25%, #212121 25%, #212121 50%, #3e3e3e 50%, #3e3e3e 75%,#212121 75%, #212121
-  );
-  background-size: 4px 4px;
+  background-color: #262626;
 }
 
 @media screen {
@@ -90,11 +87,8 @@
   }
 
   .footnote {
-    font-size: 0.95rem;
     float: footnote;
     text-align: left;
-    padding-left:2em;
-	  text-indent:-2em;
   }
 }
 
@@ -146,6 +140,13 @@
   margin-left: $page-margin-outer;
   margin-right: $page-margin-inner;
 
+  @top-center {
+    content: env(pub-title);
+    color: #fff;
+    font: 400 12px $font-family;
+    text-align: left;
+    padding: 12mm 2mm 0 2mm;
+  }
   @bottom-left {
     content: counter(page);
     font: 400 11px $font-family;
@@ -161,6 +162,13 @@
   margin-left: $page-margin-inner;
   margin-right: $page-margin-outer;
 
+  @top-center {
+    content: env(doc-title);
+    color: #fff;
+    font: 400 12px $font-family;
+    text-align: right;
+    padding: 12mm 2mm 0 2mm;
+  }
   @bottom-right {
     content: counter(page);
     font: 400 11px $font-family;
@@ -170,5 +178,4 @@
     border-right: 1px solid;
   }
 }
-
 
