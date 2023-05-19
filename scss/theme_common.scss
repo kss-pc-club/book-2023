@@ -2,12 +2,13 @@
  * For all media (print, screen)
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&display=swap');
 
 @import '_variables';
-@import '_lib-prism-okaidia';
+@import '_lib-prism-github-dark';
 @import '_lib-override';
 @import '_base';
 @import '_counter';
@@ -32,7 +33,7 @@ span.author {
   display: block;
   text-align: right;
   // font-size: 1.15em;
-  // font-weight: bold;
+  font-weight: bold;
 }
 
 p {
