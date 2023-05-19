@@ -15,7 +15,7 @@ title: 目次
 
 # 目次 {.doc}
 
-- [はじめに](forward.html)
+- [はじめに](foreword.html)
 - [第 1 章 部員アンケート 2023](questionnaire/index.html)
 - [第 2 章 茨城県版新型コロナ対策サイトの振り返り](covid19-ibaraki/index.html)
 - [第 3 章 ﾊﾟｿｺﾝｶﾀｶﾀしてたら大学合格した話 + 大学生活所感](tsukuba-ac/index.html)
