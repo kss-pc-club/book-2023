@@ -11,7 +11,7 @@ title: 目次
 2023-06-03 版　　KSS PC Club 発行
 </div>
 
-<nav id="toc" role="doc-toc">
+<ol id="toc" role="doc-toc">
 
 # 目次 {.doc}
 
@@ -28,4 +28,4 @@ title: 目次
 - [第 10 章 「文字の自動生成の仕組み」について](font-generation/index.html)
 - [執筆者紹介](comments.html)
 
-</nav>
+</ol>

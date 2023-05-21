@@ -24,3 +24,9 @@ title:はじめに
 ## 免責事項 {.doc}
 
 本書に記載された内容は、情報の提供のみを目的としています。したがって、本書を用いた開発、製作、運用は、必ずご自身の責任及び判断の上で行ってください。これらの情報による開発等の結果について、著者はいかなる責任も負いません。
+
+<br />
+
+<span class="cover-img">
+表紙画像: <a href="https://storyset.com/technology">Technology illustrations by Storyset</a>
+</span>
