@@ -1,61 +1,36 @@
-nav#toc,
-nav[role='doc-toc'] {
-  break-before: page; // 改ページ
-  font-size: 160%;
+#toc {
+  break-before: page; 
+  font-size: 120%;
   text-align: left;
-  line-height: 1.4;
   word-break: keep-all;
+}
 
-  > h2 {
-    font-size: 140%;
-  }
+#toc li {
+  list-style: none;
 
-  ol {
-    padding: 0;
-    list-style: none;
-  }
 
-  li {
-    display: flex;
-    margin: 0 0 4rem -10000px;
-    padding: 0 0 0 10000px;
-    min-height: 5rem;
-    list-style: none;
-    border-bottom: 1px solid #bbb;
-    font-family: $font-sans-serif;
+  a {
+    display: inline-flex;
+    width: 100%;
+    text-decoration: none;
+    color: currentColor;
+    align-items: baseline;
 
-    a {
-      display: inline-flex;
-      width: 100%;
-      text-decoration: none;
-      color: currentColor;
-      justify-content: space-between;
-      align-items: flex-end;
+    &::before {
+      margin-left: 0.5em;
+      margin-right: 0.5em;
+      border-bottom: 1px dotted;
+      content: '';
+      order: 1;
+      flex: auto;
+    }
 
-      ::after {
-        content: target-counter(attr(href), page);
-        font-size: 80%;
-        text-align: right;
-        align-self: flex-end;
-        flex: none;
-        order: 2;
-      }
-      ::before {
-        margin-left: 0.2em;
-        margin-right: 0.2em;
-        content: '';
-        order: 1;
-        flex: auto;
-      }
+    &::after {
+      text-align: right;
+      content: target-counter(attr(href), page);
+      align-self: flex-end;
+      flex: none;
+      order: 2;
     }
   }
-  /*
-  li:not(:first-child) {
-    a {
-      ::before {
-        content: '第 ' target-counter(attr(href url), chapter) ' 章　';
-      }
-    }
-  }
-  */
 }
