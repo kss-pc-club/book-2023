@@ -1,0 +1,54 @@
+name: Build
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Tokyo
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+        with:
+          ref: main
+      - name: Setup Node
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: '14.16.0'
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache deps
+        uses: actions/cache@v2.1.6
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install deps
+        run: yarn install --frozen-lockfile
+      - name: Install ghostscript
+        run: |
+          sudo apt-get -yqq install libgbm1 ghostscript
+          sudo apt install poppler-utils poppler-data
+      - name: Build
+        run: yarn build
+      - name: Build-v
+        run: yarn build-v
+      - name: Unite Cover
+        run: |
+          mkdir intermediate/
+          mv public/book-v.pdf intermediate/
+          gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sPAPERSIZE=jisb5 -dPDFFitPage -sOutputFile=public/book-v.pdf assets/cover.pdf intermediate/book-v.pdf assets/back.pdf
+      - name: Build Press-Ready
+        run: yarn press-ready
+      - name: Deploy
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: publish
+          FOLDER: public
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
