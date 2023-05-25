@@ -11,7 +11,7 @@
     "build:scss": "sass scss:css",
     "build:vivliostyle": "vivliostyle build",
     "build:vivliostyle-v": "vivliostyle build --style css/theme_view.css -o public/book-v.pdf",
-    "press-ready": "vivliostyle build && press-ready build -i public/book.pdf -o public/press-ready.pdf --gray-scale",
+    "press-ready": "vivliostyle build --style css/theme_pressready.css -o public/book-marked.pdf && press-ready build -i public/book-marked.pdf -o public/press-ready.pdf --gray-scale",
     "start": "run-p preview watch:scss",
     "preview": "vivliostyle preview",
     "watch:scss": "sass --watch scss:css"

@@ -31,9 +31,11 @@ jobs:
         run: |
           mkdir intermediate/
           mv public/book-v.pdf intermediate/
-          gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sPAPERSIZE=jisb5 -dPDFFitPage -sOutputFile=public/book-v.pdf assets/cover.pdf intermediate/book-v.pdf assets/back.pdf
+          gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sPAPERSIZE=jisb5 -dPDFFitPage -sOutputFile=public/book.pdf assets/cover.pdf intermediate/book-v.pdf assets/back.pdf
       - name: Build Press-Ready
-        run: yarn press-ready
+        run: |
+          yarn press-ready
+          mv public/book-marked.pdf intermediate/
       - name: Deploy
         uses: s0/git-publish-subdir-action@develop
         env:
