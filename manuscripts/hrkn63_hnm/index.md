@@ -21,19 +21,18 @@ https://github.com/hrkn63-hnm/nikoniko-board
 
 ニコニコ動画(https://www.nicovideo.jp/ )とは、YouTubeと同じ動画投稿プラットフォームの一つです。誰かがあげた動画を他の誰かが閲覧して楽しむことができます。ニコニコ動画の醍醐味といえば、この弾幕コメントです。
 
-![弾幕コメントのいい例](https://media.discordapp.net/attachments/757627473427955867/1104786970867159111/2023-05-08_0.04.55.png )
+![弾幕コメントのいい例](./danmaku.png){width=300}
 
 【実況】アマガミやるお（＾ω＾）part1/うんこちゃん
-(https://www.nicovideo.jp/watch/sm27054304 )より
+(https://www.nicovideo.jp/watch/sm27054304) より
 
 このニコニコ動画のような熱いコメントが横から流れる掲示板。それが「ニコニコ動画風コメント掲示板２」です。
 
-![実際のプロダクト](https://media.discordapp.net/attachments/757627473427955867/1105048455430295613/nikoniko-board.vercel.app__1.png )
+![実際のプロダクト](./nikoniko-board.png){width=300}
 
 画像は開発中のものです。実際のものとは少し違うかも。
 
 この「ニコニコ動画風コメント掲示板」は去年の文化祭でも掲示しました。そのパワーアップバージョンが今回のものになります。
-
 
 ## ニコニコ動画風コメント掲示板２を支える技術
 `Next.js`というフレームワークを用いています。データベースは`Firebase Firestore`を使っていて、`GitHub`へpushすると`Vercel`にそのままdeployできるようになっています。
@@ -75,7 +74,7 @@ https://github.com/hrkn63-hnm/nikoniko-board
 ### 3.コメントを横に流すCSS
 実は、`ChatGPT`に聞いてCSSをコピペしました。多少の改善は行なったものの、凄すぎます。
 
-![ChatGPTの功績](https://media.discordapp.net/attachments/757627473427955867/1105050032270487613/CSS_-_chat.openai.com.png )
+![ChatGPTの功績](./thankschatgpy.png){width=380}
 
 ## おわりに
 自分で好きなことをやっているうちに、知識なんて自然とつくもんです。
